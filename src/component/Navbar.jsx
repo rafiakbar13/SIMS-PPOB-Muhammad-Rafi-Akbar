@@ -10,8 +10,8 @@ const Navbar = () => {
           <span>SIMS PPOB</span>
         </NavLink>
         <div className="flex gap-8">
-          <NavLink to="topup">Top Up</NavLink>
-          <NavLink to="transaction">Transaction</NavLink>
+          <NavLink to="/dashboard/topup">Top Up</NavLink>
+          <NavLink to="/dashboard/transaction">Transaction</NavLink>
           <NavLink to="/akun">Akun</NavLink>
         </div>
       </nav>
