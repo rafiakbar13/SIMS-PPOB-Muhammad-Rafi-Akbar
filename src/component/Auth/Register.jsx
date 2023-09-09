@@ -152,7 +152,7 @@ const Register = () => {
             </button>
             <p className="mt-4 text-center">
               sudah punya akun? login{" "}
-              <NavLink to="/login" className="text-red-500">
+              <NavLink to="/" className="text-red-500">
                 di sini
               </NavLink>
             </p>
