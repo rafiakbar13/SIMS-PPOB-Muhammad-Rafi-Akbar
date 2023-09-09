@@ -69,7 +69,11 @@ const Akun = () => {
           >
             <div className="flex flex-col items-center justify-center">
               <label htmlFor="avatar" className="relative cursor-pointer">
-                <img src={profileImage} alt="" width={100} />
+                <img
+                  src={profileImage ? profileImage : AvatarImg}
+                  alt=""
+                  width={100}
+                />
                 <Controller
                   name="profile_image"
                   control={control}

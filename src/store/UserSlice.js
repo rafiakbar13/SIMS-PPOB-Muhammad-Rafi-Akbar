@@ -414,7 +414,12 @@ export const userSlice = createSlice({
     service: [],
     transaction: [],
   },
-  reducers: {},
+  reducers: {
+    updateOffset: (state, action) => {
+      state.offset = action.payload;
+      console.log(state.offset);
+    },
+  },
   extraReducers: (builder) => {
     builder.addCase(signUp.fulfilled, (state, action) => {
       state.isSuccess = true;
@@ -466,4 +471,5 @@ export const userSlice = createSlice({
     });
   },
 });
+export const { updateOffset } = userSlice.actions;
 export const userSelector = (state) => state.user;

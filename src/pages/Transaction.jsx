@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { getTransactionHistory } from "../store/UserSlice";
+import { getTransactionHistory, updateOffset } from "../store/UserSlice";
 import { useParams } from "react-router-dom";
 import { HiPlus, HiMinus } from "react-icons/hi";
 import moment from "moment/moment";
@@ -10,13 +10,15 @@ const Transaction = () => {
   const transactionHistory = useSelector((state) => state.user.transaction);
   const offset = useSelector((state) => state.user.offset);
   const limit = useSelector((state) => state.user.limit);
+  console.log(offset);
   useEffect(() => {
     dispatch(getTransactionHistory(offset, limit));
   }, [dispatch, offset, limit]);
 
   const handleShowMore = () => {
-    // const offset = offset + limit;
-    dispatch(getTransactionHistory(offset, limit));
+    const newOffset = offset + limit;
+    dispatch(updateOffset(newOffset));
+    dispatch(getTransactionHistory({ offset: newOffset, limit }));
   };
 
   return (
