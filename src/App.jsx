@@ -6,10 +6,15 @@ import Login from "./component/Auth/Login";
 import Topup from "./pages/Topup";
 import Akun from "./pages/Akun";
 import Transaction from "./pages/Transaction";
+import Pembayaran from "./pages/Pembayaran";
 
 const router = createBrowserRouter([
   {
     path: "/",
+    element: <Login />,
+  },
+  {
+    path: "/dashboard",
     element: <RootLayout />,
     children: [
       {
@@ -24,18 +29,18 @@ const router = createBrowserRouter([
         path: "transaction",
         element: <Transaction />,
       },
+      {
+        path: "pembayaran/:id",
+        element: <Pembayaran />,
+      },
     ],
-  },
-  {
-    path: "login",
-    element: <Login />,
   },
   {
     path: "register",
     element: <Register />,
   },
   {
-    path: "akun",
+    path: "/akun",
     element: <Akun />,
   },
 ]);

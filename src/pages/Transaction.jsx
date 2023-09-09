@@ -2,8 +2,9 @@ import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { getTransactionHistory } from "../store/UserSlice";
 import { useParams } from "react-router-dom";
-import { HiPlus } from "react-icons/hi";
+import { HiPlus, HiMinus } from "react-icons/hi";
 import moment from "moment/moment";
+
 const Transaction = () => {
   const dispatch = useDispatch();
   const transactionHistory = useSelector((state) => state.user.transaction);
@@ -11,10 +12,11 @@ const Transaction = () => {
   const limit = useSelector((state) => state.user.limit);
   useEffect(() => {
     dispatch(getTransactionHistory(offset, limit));
-  }, [dispatch]);
+  }, [dispatch, offset, limit]);
 
   const handleShowMore = () => {
-    dispatch(getTransactionHistory(offset + limit, limit));
+    // const offset = offset + limit;
+    dispatch(getTransactionHistory(offset, limit));
   };
 
   return (
@@ -22,13 +24,26 @@ const Transaction = () => {
       <h5 className="font-semibold">Semua Transaksi</h5>
       <div className="">
         {transactionHistory.map((item) => {
+          const isTopUp = item.transaction_type === "TOPUP";
+          const amountText = isTopUp
+            ? `Rp.${item.total_amount}`
+            : `Rp.${item.total_amount}`;
+
           return (
-            <div className="my-2 w-full border rounded-md p-4">
-              <div className="flex justify-between items-center">
-                <div className="flex flex-row gap-4 items-center">
-                  <HiPlus className="text-2xl text-green-400" />
-                  <span className="text-base text-green-400 font-bold">
-                    Rp.{item.total_amount}
+            <div className="w-full p-4 my-2 border rounded-md">
+              <div className="flex items-center justify-between">
+                <div className="flex flex-row items-center gap-4">
+                  {isTopUp ? (
+                    <HiPlus className="text-2xl text-green-400" />
+                  ) : (
+                    <HiMinus className="text-2xl text-red-400" />
+                  )}
+                  <span
+                    className={`text-base ${
+                      isTopUp ? "text-green-400" : "text-red-400"
+                    } font-bold`}
+                  >
+                    {amountText}
                   </span>
                 </div>
                 <div>
@@ -38,7 +53,7 @@ const Transaction = () => {
                 </div>
               </div>
               <div>
-                <span className="text-xs text-gray-400 ml-3 mt-2">
+                <span className="mt-2 ml-3 text-xs text-gray-400">
                   {moment(item.created_on).format("DD MMM YYYY, HH:mm")} WIB
                 </span>
               </div>
@@ -47,7 +62,7 @@ const Transaction = () => {
         })}
       </div>
       <button
-        className="text-center my-4 text-red-500 font-semibold"
+        className="my-4 font-semibold text-center text-red-500"
         onClick={handleShowMore}
       >
         Show more

@@ -7,7 +7,6 @@ import { CiLock } from "react-icons/ci";
 import { IoPersonOutline } from "react-icons/io5";
 import { NavLink } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { userSelector } from "../../store/UserSlice";
 import { signUp } from "../../store/UserSlice";
 import Swal from "sweetalert2";
 const Register = () => {
@@ -22,8 +21,6 @@ const Register = () => {
     handleSubmit,
     formState: { errors },
   } = useForm();
-  const { isFetching, isSuccess, isError, errorMessage } =
-    useSelector(userSelector);
   const onSubmit = (data) => {
     console.log(data);
     if (data.password !== data.confirmPassword) {

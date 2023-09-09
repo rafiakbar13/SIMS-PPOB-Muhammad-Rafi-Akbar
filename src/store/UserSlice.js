@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 import Swal from "sweetalert2";
-const api = "https://take-home-test-api.nutech-integrasi.app";
+const api = import.meta.env.VITE_API_URL;
 import { setTokenWithExpiration, getToken } from "../service/auth-verify";
 
 export const signUp = createAsyncThunk(
@@ -26,7 +26,7 @@ export const signUp = createAsyncThunk(
         return thunkAPI.rejectWithValue(response.data);
       }
     } catch (error) {
-      if (error.response && error.response.status === 400) {
+      if (error.response.status === 400) {
         Swal.fire({
           icon: "error",
           title: "Register Failed",
@@ -53,19 +53,19 @@ export const signIn = createAsyncThunk(
           title: "Login Success",
           text: "Welcome",
         });
-        window.location.href = "/";
+        window.location.href = "/dashboard";
         return response.data;
       } else {
         return thunkAPI.rejectWithValue(response.data);
       }
     } catch (error) {
-      if (error.response && error.response.status === 400) {
+      if (error.response.status === 400) {
         Swal.fire({
           icon: "error",
           title: "Login Failed",
           text: error.response.data.message,
         });
-      } else if (error.response && error.response.status === 401) {
+      } else if (error.response.status === 401) {
         Swal.fire({
           icon: "error",
           title: "Login Failed",
@@ -95,7 +95,7 @@ export const getBanner = createAsyncThunk("getBanner", async (_, thunkAPI) => {
       return thunkAPI.rejectWithValue(response.data.data);
     }
   } catch (error) {
-    if (response.status === 401) {
+    if (error.response.status === 401) {
       Swal.fire({
         icon: "error",
         title: "",
@@ -125,7 +125,7 @@ export const getService = createAsyncThunk(
         return thunkAPI.rejectWithValue(response.data.data);
       }
     } catch (error) {
-      if (response.data.status === 401) {
+      if (error.response.status === 401) {
         Swal.fire({
           icon: "error",
           title: "Login Failed",
@@ -170,7 +170,7 @@ export const postTopup = createAsyncThunk(
         return thunkAPI.rejectWithValue(response.data.data);
       }
     } catch (error) {
-      if (error.response && error.response.status === 401) {
+      if (error.response.status === 401) {
         Swal.fire({
           icon: "error",
           title: "Login Failed",
@@ -201,7 +201,7 @@ export const getBalance = createAsyncThunk(
         return thunkAPI.rejectWithValue(response.data.data);
       }
     } catch (error) {
-      if (response.status === 401) {
+      if (error.response.status === 401) {
         Swal.fire({
           icon: "error",
           title: "Login Failed",
@@ -244,7 +244,7 @@ export const updateProfile = createAsyncThunk(
         return thunkAPI.rejectWithValue(response.data.data);
       }
     } catch (error) {
-      if (response.data.status === 401) {
+      if (error.response.status === 401) {
         Swal.fire({
           icon: "error",
           title: "Login Failed",
@@ -274,7 +274,7 @@ export const getProfile = createAsyncThunk(
         return thunkAPI.rejectWithValue(response.data.data);
       }
     } catch (error) {
-      if (response.data.status === 401) {
+      if (error.response.status === 401) {
         Swal.fire({
           icon: "error",
           title: "Login Failed",
@@ -312,7 +312,7 @@ export const updateProfileImage = createAsyncThunk(
         return thunkAPI.rejectWithValue(response.data.data);
       }
     } catch (error) {
-      if (response.status === 401) {
+      if (error.response.status === 401) {
         Swal.fire({
           icon: "error",
           title: "",
@@ -324,12 +324,12 @@ export const updateProfileImage = createAsyncThunk(
 );
 
 export const getTransactionHistory = createAsyncThunk(
-  "getTransactionHistory",
+  "transactionHistory",
   async ({ offset, limit }, thunkAPI) => {
     try {
       const token = getToken();
       if (!token) {
-        return thunkAPI.rejectWithValue(response.data.message);
+        return thunkAPI.rejectWithValue(response.data);
       }
       const response = await axios.get(`${api}/transaction/history`, {
         params: {
@@ -343,10 +343,52 @@ export const getTransactionHistory = createAsyncThunk(
       if (response.status === 200) {
         return response.data.data;
       } else {
+        return thunkAPI.rejectWithValue(response.data.data);
+      }
+    } catch (error) {
+      if (error.response.status === 401) {
+        Swal.fire({
+          icon: "error",
+          title: "",
+          text: error.response.data.message,
+        });
+      }
+    }
+  }
+);
+
+export const postTransaction = createAsyncThunk(
+  "transaction",
+  async ({ service_code }, thunkAPI) => {
+    try {
+      const token = getToken();
+      if (!token) {
+        return thunkAPI.rejectWithValue(response.data.message);
+      }
+      const response = await axios.post(
+        `${api}/transaction`,
+        {
+          service_code,
+          transaction_type: "PAYMENT",
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      if (response.status === 200) {
+        Swal.fire({
+          icon: "success",
+          title: "Transaction Success",
+          text: response.data.message,
+        });
+        return response.data.data;
+      } else {
         return thunkAPI.rejectWithValue(response.data.message);
       }
     } catch (error) {
-      if (response.status === 401) {
+      if (error.response.status === 401) {
         Swal.fire({
           icon: "error",
           title: "",
@@ -419,7 +461,9 @@ export const userSlice = createSlice({
       state.limit = action.payload.limit;
       state.transaction = action.payload.records;
     });
+    builder.addCase(postTransaction.fulfilled, (state, action) => {
+      state.balance = action.payload.balance;
+    });
   },
 });
-
 export const userSelector = (state) => state.user;

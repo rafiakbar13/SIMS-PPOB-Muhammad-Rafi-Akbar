@@ -47,7 +47,7 @@ const Akun = () => {
     if (localStorage.getItem("token")) {
       localStorage.removeItem("token");
       localStorage.removeItem("tokenExpiration");
-      navigate("/login");
+      navigate("/");
     }
   };
 
@@ -62,7 +62,7 @@ const Akun = () => {
         {/* Image */}
 
         {/* Form */}
-        <div className="flex flex-col w-1/2 mt-3 gap-8">
+        <div className="flex flex-col w-1/2 gap-8 mt-3">
           <form
             className="flex flex-col gap-3"
             onSubmit={handleSubmit(onSubmit)}
