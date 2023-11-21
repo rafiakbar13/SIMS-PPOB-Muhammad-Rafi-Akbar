@@ -12,13 +12,14 @@ const Dashboard = () => {
   const firstName = useSelector((state) => state.user.first_Name);
   const lastName = useSelector((state) => state.user.last_Name);
   const profileImage = useSelector((state) => state.user.profile_image);
+
   useEffect(() => {
     dispatch(getProfile());
   }, [dispatch]);
 
   useEffect(() => {
     dispatch(getBalance());
-  }, [dispatch]);
+  }, [dispatch, balance]);
 
   const handleShowBalance = () => {
     setShow(!show);
@@ -49,7 +50,10 @@ const Dashboard = () => {
                 {Array(6)
                   .fill()
                   .map((_, i) => (
-                    <BsFillCircleFill className="inline-block mx-1 space-x-2 text-[8px]" />
+                    <BsFillCircleFill
+                      key={i}
+                      className="inline-block mx-1 space-x-2 text-[8px]"
+                    />
                   ))}
               </p>
             )}

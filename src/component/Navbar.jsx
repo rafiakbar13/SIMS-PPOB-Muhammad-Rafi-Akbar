@@ -1,7 +1,9 @@
 import React from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useLocation } from "react-router-dom";
 import Logo from "../assets/Logo.png";
 const Navbar = () => {
+  const location = useLocation();
+  const route = location.pathname.split("/")[2];
   return (
     <header className="border-b-[1.5px] pt-8">
       <nav className="flex items-center justify-between mb-3 ">

@@ -1,16 +1,13 @@
 import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { getTransactionHistory, updateOffset } from "../store/UserSlice";
-import { useParams } from "react-router-dom";
 import { HiPlus, HiMinus } from "react-icons/hi";
 import moment from "moment/moment";
 
 const Transaction = () => {
   const dispatch = useDispatch();
-  const transactionHistory = useSelector((state) => state.user.transaction);
-  const offset = useSelector((state) => state.user.offset);
-  const limit = useSelector((state) => state.user.limit);
-  console.log(offset);
+  const { transaction, offset, limit } = useSelector((state) => state.user);
+
   useEffect(() => {
     dispatch(getTransactionHistory(offset, limit));
   }, [dispatch, offset, limit]);
@@ -25,20 +22,18 @@ const Transaction = () => {
     <section className="flex flex-col mt-8">
       <h5 className="font-semibold">Semua Transaksi</h5>
       <div className="">
-        {transactionHistory.map((item) => {
+        {transaction.map((item, index) => {
           const isTopUp = item.transaction_type === "TOPUP";
-          const amountText = isTopUp
-            ? `Rp.${item.total_amount}`
-            : `Rp.${item.total_amount}`;
+          const amountText = `Rp.${item.total_amount}`;
 
           return (
-            <div className="w-full p-4 my-2 border rounded-md">
+            <div key={item.id} className="w-full p-4 my-2 border rounded-md">
               <div className="flex items-center justify-between">
                 <div className="flex flex-row items-center gap-4">
                   {isTopUp ? (
-                    <HiPlus className="text-2xl text-green-400" />
+                    <HiPlus key={index} className="text-2xl text-green-400" />
                   ) : (
-                    <HiMinus className="text-2xl text-red-400" />
+                    <HiMinus key={index} className="text-2xl text-red-400" />
                   )}
                   <span
                     className={`text-base ${
