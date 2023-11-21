@@ -53,7 +53,7 @@ export const signIn = createAsyncThunk(
           title: "Login Success",
           text: "Welcome",
         });
-        window.location.href = "/dashboard";
+        window.location.href = "dashboard";
         return response.data;
       } else {
         return thunkAPI.rejectWithValue(response.data);
