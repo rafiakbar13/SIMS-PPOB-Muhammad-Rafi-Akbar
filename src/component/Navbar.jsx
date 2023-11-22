@@ -1,9 +1,7 @@
 import React from "react";
-import { NavLink, useLocation } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import Logo from "../assets/Logo.png";
 const Navbar = () => {
-  const location = useLocation();
-  const route = location.pathname.split("/")[2];
   return (
     <header className="border-b-[1.5px] pt-8">
       <nav className="flex items-center justify-between mb-3 ">
@@ -12,9 +10,30 @@ const Navbar = () => {
           <span>SIMS PPOB</span>
         </NavLink>
         <div className="flex gap-8">
-          <NavLink to="/dashboard/topup">Top Up</NavLink>
-          <NavLink to="/dashboard/transaction">Transaction</NavLink>
-          <NavLink to="/akun">Akun</NavLink>
+          <NavLink
+            to="/dashboard/topup"
+            className={({ isActive }) =>
+              isActive ? "text-red-400 font-semibold" : ""
+            }
+          >
+            Top Up
+          </NavLink>
+          <NavLink
+            to="/dashboard/transaction"
+            className={({ isActive }) =>
+              isActive ? "text-red-400 font-semibold" : ""
+            }
+          >
+            Transaction
+          </NavLink>
+          <NavLink
+            to="/akun"
+            className={({ isActive }) =>
+              isActive ? "text-red-400 font-semibold" : ""
+            }
+          >
+            Akun
+          </NavLink>
         </div>
       </nav>
     </header>

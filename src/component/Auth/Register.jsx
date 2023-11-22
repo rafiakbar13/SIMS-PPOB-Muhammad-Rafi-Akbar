@@ -5,7 +5,7 @@ import Hero from "../../assets/Illustrasi Login.png";
 import { LuAtSign } from "react-icons/lu";
 import { CiLock } from "react-icons/ci";
 import { IoPersonOutline } from "react-icons/io5";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { signUp } from "../../store/UserSlice";
 import Swal from "sweetalert2";
@@ -16,13 +16,13 @@ const Register = () => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm();
-  const onSubmit = (data) => {
-    console.log(data);
+  const onSubmit = async (data) => {
     if (data.password !== data.confirmPassword) {
       Swal.fire({
         icon: "error",
@@ -30,7 +30,16 @@ const Register = () => {
         text: "Password tidak sama",
       });
     }
-    dispatch(signUp(data));
+    const resultAction = await dispatch(signUp(data));
+    if (signUp.fulfilled.match(resultAction)) {
+      navigate("/");
+    } else {
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: "Email sudah terdaftar",
+      });
+    }
   };
   return (
     <section className="flex justify-center">

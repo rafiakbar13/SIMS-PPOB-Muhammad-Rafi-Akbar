@@ -4,14 +4,21 @@ import Hero from "../../assets/Illustrasi Login.png";
 import { LuAtSign } from "react-icons/lu";
 import { CiLock } from "react-icons/ci";
 import { useForm, Controller } from "react-hook-form";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { signIn } from "../../store/UserSlice";
 const Login = () => {
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const { handleSubmit, control } = useForm();
-  const onSubmit = (data) => {
-    dispatch(signIn(data));
+
+  const onSubmit = async (data) => {
+    const resultAction = await dispatch(signIn(data));
+    if (signIn.fulfilled.match(resultAction)) {
+      navigate("/dashboard");
+    } else {
+      console.log("error");
+    }
   };
 
   return (
@@ -66,7 +73,6 @@ const Login = () => {
                 )}
               />
             </div>
-
             <button
               type="submit"
               className="w-full py-3 text-white bg-red-500 rounded"

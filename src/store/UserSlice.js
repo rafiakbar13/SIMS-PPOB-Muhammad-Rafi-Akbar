@@ -1,8 +1,9 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 import Swal from "sweetalert2";
-const api = import.meta.env.VITE_API_URL;
+import { useNavigate } from "react-router-dom";
 import { setTokenWithExpiration, getToken } from "../service/auth-verify";
+const api = import.meta.env.VITE_API_URL;
 
 export const signUp = createAsyncThunk(
   "registration",
@@ -20,7 +21,6 @@ export const signUp = createAsyncThunk(
           title: "Register Success",
           text: "Please Login",
         });
-        window.location.href = "/login";
         return response.data;
       } else {
         return thunkAPI.rejectWithValue(response.data);
@@ -53,7 +53,8 @@ export const signIn = createAsyncThunk(
           title: "Login Success",
           text: "Welcome",
         });
-        window.location.href = "dashboard";
+
+        // window.location.href = "/dashboard";
         return response.data;
       } else {
         return thunkAPI.rejectWithValue(response.data);
@@ -421,6 +422,13 @@ export const userSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
+    builder.addCase(signIn.fulfilled, (state, action) => {
+      state.isSuccess = true;
+      state.isError = false;
+      state.errorMessage = "";
+      // state.email = action.payload.email;
+      // state.password = action.payload.password;
+    });
     builder.addCase(signUp.fulfilled, (state, action) => {
       state.isSuccess = true;
       state.isError = false;
@@ -432,8 +440,6 @@ export const userSlice = createSlice({
       state.isSuccess = true;
       state.isError = false;
       state.errorMessage = "";
-      state.email = action.payload.email;
-      state.password = action.payload.password;
     });
     builder.addCase(getBanner.fulfilled, (state, action) => {
       state.banner = action.payload;
